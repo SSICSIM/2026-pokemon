@@ -1,105 +1,185 @@
 {
   "default": "left",
   "pokemon": {
-    "Absol-Mega": {
-      "battle": "left",
-      "victory": "left"
-    },
     "Absol": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Mr. Stone"
     },
-    "Blaziken-Mega": {
-      "battle": "right",
-      "victory": "left"
+    "Absol-Mega": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Mr. Stone"
+    },
+    "Altaria": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Winona"
+    },
+    "Altaria-Mega": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Winona"
     },
     "Blaziken": {
       "battle": "right",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Flannery"
+    },
+    "Blaziken-Mega": {
+      "battle": "right",
+      "victory": "left",
+      "trainer": "Flannery"
     },
     "Cacnea": {
       "battle": "left",
-      "victory": "left"
-    },
-    "Camerupt-Mega": {
-      "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "James"
     },
     "Camerupt": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Tabitha"
+    },
+    "Camerupt-Mega": {
+      "battle": "right",
+      "victory": "left",
+      "trainer": "Tabitha"
     },
     "Ceruledge": {
       "battle": "right",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Jessie"
     },
     "Cinderace": {
       "battle": "right",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Blaise"
     },
     "Decidueye": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Maxie"
+    },
+    "Dusclops": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Phoebe"
     },
     "Gholdengo": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Zinnia"
     },
-    "Metagross-Mega": {
+    "Glalie": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Glacia"
+    },
+    "Glalie-Mega": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Glacia"
+    },
+    "Hariyama": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Brawly"
     },
     "Metagross": {
       "battle": "right",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Gabby"
+    },
+    "Metagross-Mega": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Gabby"
+    },
+    "Mightyena": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Sidney"
     },
     "Milotic": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Wallace"
     },
     "Mimikyu": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Professor Cozmo"
+    },
+    "Nosepass": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Roxanne"
     },
     "Palafin": {
       "battle": "right",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Archie"
     },
     "Pikachu": {
       "battle": "right",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Meowth"
     },
     "Scorbunny": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Mayson"
     },
     "Serperior": {
       "battle": "left",
-      "victory": "left"
-    },
-    "Sharpedo-Mega": {
-      "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Wattson"
     },
     "Sharpedo": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Shelly"
+    },
+    "Sharpedo-Mega": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Shelly"
+    },
+    "Shelgon": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Drake"
     },
     "Skarmory": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Steven Stone"
+    },
+    "Slaking": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Norman"
     },
     "Snorlax": {
       "battle": "right",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Brenda"
+    },
+    "Solrock-Lunatone": {
+      "battle": "left",
+      "victory": "left",
+      "trainer": "Tate & Liza"
     },
     "Spheal": {
       "battle": "right",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Grannie"
     },
     "Volbeat": {
       "battle": "left",
-      "victory": "left"
+      "victory": "left",
+      "trainer": "Amber"
     }
   }
 }
