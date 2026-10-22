@@ -21,7 +21,8 @@ export default function LoginPage() {
       redirect: false,
     });
     if (result?.ok && !result?.error) {
-      window.location.href = "/";
+      const callback = new URLSearchParams(window.location.search).get("callbackUrl");
+      window.location.href = callback?.startsWith("/") && !callback.startsWith("//") && !callback.includes("\\") ? callback : "/";
     } else {
       setError(true);
       setLoading(false);
@@ -32,7 +33,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Crisis Tracker</CardTitle>
+          <CardTitle className="text-2xl">Pokémon Battle Studio</CardTitle>
           <CardDescription>Enter the staff password to continue.</CardDescription>
         </CardHeader>
         <CardContent>

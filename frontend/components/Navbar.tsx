@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CharacterManagerDialog } from "@/components/crisis/CharacterManagerDialog";
 
 export function Navbar() {
   const [charOpen, setCharOpen] = useState(false);
+  const pathname = usePathname();
+  if (pathname === "/" || pathname === "/battle" || pathname === "/login") return null;
 
   return (
     <>

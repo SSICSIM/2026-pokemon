@@ -26,6 +26,7 @@ if (fs.existsSync(rootEnvPath)) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  devIndicators: false,
   reactStrictMode: true,
   images: {
     unoptimized: true

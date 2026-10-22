@@ -12,8 +12,8 @@ import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Base Mechanics",
-  description: "Base mechanics template."
+  title: "Pokémon Battle Studio",
+  description: "Create a click-through Pokémon battle."
 };
 
 export default function RootLayout(props: { children: React.ReactNode }) {
