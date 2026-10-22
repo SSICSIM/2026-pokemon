@@ -1,0 +1,105 @@
+{
+  "default": "left",
+  "pokemon": {
+    "Absol-Mega": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Absol": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Blaziken-Mega": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Blaziken": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Cacnea": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Camerupt-Mega": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Camerupt": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Ceruledge": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Cinderace": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Decidueye": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Gholdengo": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Metagross-Mega": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Metagross": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Milotic": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Mimikyu": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Palafin": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Pikachu": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Scorbunny": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Serperior": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Sharpedo-Mega": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Sharpedo": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Skarmory": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Snorlax": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Spheal": {
+      "battle": "left",
+      "victory": "left"
+    },
+    "Volbeat": {
+      "battle": "left",
+      "victory": "left"
+    }
+  }
+}
