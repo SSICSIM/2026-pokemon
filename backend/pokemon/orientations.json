@@ -1,0 +1,30 @@
+{
+  "default": "left",
+  "pokemon": {
+    "Absol-Mega": "left",
+    "Absol": "left",
+    "Blaziken-Mega": "left",
+    "Blaziken": "left",
+    "Cacnea": "left",
+    "Camerupt-Mega": "left",
+    "Camerupt": "left",
+    "Ceruledge": "left",
+    "Cinderace": "left",
+    "Decidueye": "left",
+    "Gholdengo": "left",
+    "Metagross-Mega": "left",
+    "Metagross": "left",
+    "Milotic": "left",
+    "Mimikyu": "left",
+    "Palafin": "left",
+    "Pikachu": "left",
+    "Scorbunny": "left",
+    "Serperior": "left",
+    "Sharpedo-Mega": "left",
+    "Sharpedo": "left",
+    "Skarmory": "left",
+    "Snorlax": "left",
+    "Volbeat": "left",
+    "Spheal": "left"
+  }
+}
