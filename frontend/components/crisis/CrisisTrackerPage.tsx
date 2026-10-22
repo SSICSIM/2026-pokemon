@@ -7,13 +7,13 @@ import { AnalyticsTab } from "./AnalyticsTab";
 import { ArchiveTab } from "./ArchiveTab";
 import { PeriodBanner } from "./PeriodBanner";
 
-export function CrisisTrackerPage() {
+export function CrisisTrackerPage({ embedded = false }: { embedded?: boolean }) {
   const { data: activePeriod } = useActivePeriod();
 
   return (
-    <main className="page-shell space-y-4">
+    <section className={embedded ? "space-y-4" : "page-shell space-y-4"}>
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Crisis Tracker</h1>
+        <h2 className="text-lg font-semibold tracking-tight">Crisis Tracker</h2>
         <p className="text-muted-foreground text-sm">
           Track directives and crisis notes for this committee session.
         </p>
@@ -40,6 +40,6 @@ export function CrisisTrackerPage() {
           <AnalyticsTab defaultPeriodId={activePeriod?.id ?? null} />
         </TabsContent>
       </Tabs>
-    </main>
+    </section>
   );
 }

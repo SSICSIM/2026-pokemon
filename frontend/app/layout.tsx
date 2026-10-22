@@ -12,8 +12,8 @@ import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Pokémon Battle Studio",
-  description: "Create a click-through Pokémon battle."
+  title: "SSICSIM · Committee tools",
+  description: "Committee crisis tracking and Pokémon battle generation."
 };
 
 export default function RootLayout(props: { children: React.ReactNode }) {

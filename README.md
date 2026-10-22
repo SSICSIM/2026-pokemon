@@ -3,19 +3,23 @@ A repository for a template for base mechanics for commitee development.
 
 ## Pokémon battle animator
 
-The home page is a battle menu: choose the left and right Pokémon, pick the
-winning side, and press **Make video**. This plays an interactive slideshow
+The home page is the SSICSIM committee workspace, with **Crisis Tracker** and
+**Battle Generator** tabs. In Battle Generator, choose the left and right Pokémon,
+pick the winning side, and press **Make video**. Open `/?tab=battle` to select
+the generator directly. The `/login` password screen still protects the workspace. This plays an interactive slideshow
 (not an exported video file). Click anywhere, press Space, Enter, or the right
 arrow to advance:
 
 1. Left Pokémon fullscreen.
 2. Right Pokémon fullscreen.
-3. Both Pokémon side by side, shaking independently.
+3. Both Pokémon side by side, shaking independently in 12 held poses per second.
 4. Fade to white.
 5. Fade from white to the winner's victory animation.
 6. Fade to black.
 7. Return to the menu.
 
+Playback fills each frame with centered cropping rather than letterboxing.
+The shake uses hard 12 fps pose changes; reduced-motion preferences disable it.
 There are no visible controls during playback. Escape returns to the menu.
 The start button requests browser fullscreen; shared links fill the viewport
 immediately and request browser fullscreen on the first click.
@@ -42,7 +46,7 @@ the battle URL is preserved through login.
 - Edit `backend/pokemon/orientations.json`: `default` sets the default facing
   direction, and `pokemon` overrides it by Pokémon name (without suffix).
   Values are `"left"` or `"right"`, describing the original media. Pokémon
-  on the left face right, and those on the right face left; images flip
+  on the left face left, and those on the right face right; media flips
   automatically when needed, for all image and video formats. A string applies
   to both battle and victory. An object can override them separately; omitted
   directions use `default`. New Pokémon without entries also use `default`.

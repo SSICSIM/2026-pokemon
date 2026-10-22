@@ -154,46 +154,28 @@
   padding: 1.5rem;
 }
 
-/* Pokémon battle studio */
-.animator-menu { min-height: 100dvh; display: grid; place-items: center; padding: 40px 20px; background: #f6f5f1; color: #242722; }
-.animator-panel { width: 100%; max-width: 680px; }
-.animator-eyebrow { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; letter-spacing: .18em; color: #687060; }
-.pokeball-mark { width: 19px; height: 19px; border: 2px solid #333b2e; border-radius: 50%; background: linear-gradient(to bottom, #333b2e 45%, #f6f5f1 45%, #f6f5f1 58%, transparent 58%); }
-.animator-panel h1 { margin-top: 24px; font-size: clamp(34px, 6vw, 48px); font-weight: 600; letter-spacing: -.055em; line-height: 1.15; }
-.animator-subtitle { margin-top: 12px; font-size: 14px; color: #777c72; }
-.animator-matchup { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 32px; }
-.animator-pick { min-width: 0; padding: 20px; border: 1px solid #dedfd7; border-radius: 16px; background: #fff; }
-.animator-pick label { font-size: 10px; font-weight: 600; letter-spacing: .15em; color: #858b7f; }
-.animator-preview { height: 180px; display: grid; place-items: center; padding: 16px; }
-.animator-preview .battle-sprite { max-height: 145px; }
-.animator-pick select { width: 100%; padding: 11px 10px; font: inherit; font-size: 13px; font-weight: 500; border: 1px solid #e1e3dc; border-radius: 7px; background: #fafbf8; color: #242722; }
-.animator-pick select:focus-visible, .animator-winner button:focus-visible, .animator-footer button:focus-visible { outline: 2px solid #637452; outline-offset: 3px; }
-.animator-versus { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid #dedfd7; border-radius: 50%; background: #f6f5f1; font-size: 10px; font-weight: 700; font-style: italic; color: #7d8476; }
-.animator-winner { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; gap: 12px; }
-.animator-winner > span { display: flex; align-items: center; gap: 9px; font-size: 13px; color: #687060; }
-.animator-winner-options { display: flex; gap: 4px; background: #e9ebe3; padding: 4px; border-radius: 8px; }
-.animator-winner button { display: flex; gap: 6px; align-items: center; justify-content: center; min-width: 76px; padding: 7px 12px; border-radius: 5px; font-size: 12px; color: #717868; cursor: pointer; }
-.animator-winner button[aria-pressed=true] { background: #fff; color: #384b2b; box-shadow: 0 1px 3px #24302012; }
-.animator-start { width: 100%; height: 48px; border-radius: 9px; background: #34482b; color: #fff; gap: 10px; }
-.animator-start:hover { background: #263b1e; }
-.animator-start svg:last-child { margin-left: auto; }
-.animator-start svg:first-child { margin-right: auto; }
-.animator-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 18px; color: #858b7f; font-size: 11px; }
-.animator-footer button { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+/* Fullscreen playback uses its own canvas; menu styling uses shared UI tokens. */
 .battle-stage { position: fixed; inset: 0; width: 100%; height: 100dvh; z-index: 1000; background: #fff; overflow: hidden; cursor: none; user-select: none; }
-.battle-solo { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-.battle-sprite { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-.battle-pair { display: flex; width: 100%; height: 100%; align-items: center; }
-.battle-fighter { width: 50%; height: 90%; padding: 2vw; }
-.battle-shake-left { animation: battle-shake-a .31s infinite alternate ease-in-out; }
-.battle-shake-right { animation: battle-shake-b .39s -.17s infinite alternate ease-in-out; }
+.battle-solo { width: 100%; height: 100%; overflow: hidden; }
+.battle-sprite { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; }
+/* Each side masks its overscanned media before the two layers are composited. */
+.battle-pair { position: relative; width: 100%; height: 100%; }
+.battle-fighter { position: absolute; top: 0; bottom: 0; overflow: hidden; clip-path: inset(0); }
+.battle-fighter-left { left: 0; width: var(--battle-split, 50%); }
+.battle-fighter-right { right: 0; width: calc(100% - var(--battle-split, 50%)); }
+.battle-motion { width: 100%; height: 100%; will-change: transform; }
+.battle-shake-left { transform: var(--shake-left, scale(1.1)); }
+.battle-shake-right { transform: var(--shake-right, scale(1.1)); }
 .battle-curtain { position: absolute; inset: 0; pointer-events: none; }
-.battle-white-in { background: white; animation: battle-fade-in .8s both; }
-.battle-white-out { background: white; animation: battle-fade-out .8s both; }
-.battle-black-in { background: black; animation: battle-fade-in .8s both; }
-@keyframes battle-shake-a { 0%,100% { transform: translate(-5px, 2px) rotate(-1deg); } 35% { transform: translate(7px, -4px) rotate(1.2deg); } 70% { transform: translate(-3px, 5px) rotate(-.6deg); } }
-@keyframes battle-shake-b { 0%,100% { transform: translate(6px, -3px) rotate(1deg); } 40% { transform: translate(-6px, 5px) rotate(-1.3deg); } 75% { transform: translate(3px, -5px) rotate(.7deg); } }
-@keyframes battle-fade-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes battle-fade-out { from { opacity: 1; } to { opacity: 0; } }
-@media (max-width: 480px) { .animator-pick { padding: 12px; } .animator-preview { height: 140px; padding: 8px; } .animator-matchup { gap: 12px; } }
-@media (prefers-reduced-motion: reduce) { .battle-shake-left, .battle-shake-right { animation: none; } }
+.battle-white-in { background: white; opacity: var(--battle-white, 0); }
+.battle-white-out { background: white; animation: battle-fade-out .833333s steps(2, end) both; }
+.battle-black-in { background: black; animation: battle-fade-in .833333s steps(2, end) both; }
+/* Eased opacity poses, each held on twos by the stepped timing function. */
+@keyframes battle-fade-in {
+  0% { opacity: 0; } 20% { opacity: .104; } 40% { opacity: .352; }
+  60% { opacity: .648; } 80% { opacity: .896; } 100% { opacity: 1; }
+}
+@keyframes battle-fade-out {
+  0% { opacity: 1; } 20% { opacity: .896; } 40% { opacity: .648; }
+  60% { opacity: .352; } 80% { opacity: .104; } 100% { opacity: 0; }
+}
