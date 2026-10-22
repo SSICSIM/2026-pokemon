@@ -7,7 +7,10 @@ import type { Pokemon } from "@/lib/pokemon-media";
 type Side = "left" | "right";
 
 const FRAME_MS = 1000 / 12; // On twos: hold each pose for two frames of 24 fps.
-const TAKEOVER_MS = 2000;
+const OSCILLATION_MS = 3000;
+const TAKEOVER_MS = 1500;
+const RESOLUTION_MS = 4500;
+const TAKEOVER_DELAY_MS = RESOLUTION_MS - TAKEOVER_MS;
 const easeInOut = (t: number) => t * t * (3 - 2 * t);
 const clamp = (t: number) => Math.max(0, Math.min(1, t));
 
@@ -27,7 +30,8 @@ export function BattleAnimator({ pokemon, initialLeft, initialRight, initialWinn
   const [slide, setSlide] = useState(autoplay && validLeft && validRight ? 1 : 0);
   const [copied, setCopied] = useState(false);
   const lockedUntil = useRef(0);
-  const stageRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const lightningRef = useRef<SVGSVGElement>(null);
   const battleFrame = useRef({ split: 50, time: 0 });
   const left = pokemon.find(p => p.name === leftName);
   const right = pokemon.find(p => p.name === rightName);
@@ -51,7 +55,7 @@ export function BattleAnimator({ pokemon, initialLeft, initialRight, initialWinn
     if (slide === 6) { returnToMenu(); return; }
     if (slide === 0) return;
     const next = slide + 1;
-    if (next >= 4) lockedUntil.current = Date.now() + (next === 4 ? TAKEOVER_MS : 850);
+    if (next >= 4) lockedUntil.current = Date.now() + (next === 4 ? RESOLUTION_MS : 850);
     setSlide(next);
     // A shared URL can enter browser fullscreen on its first user gesture.
     if (!document.fullscreenElement) void document.documentElement.requestFullscreen?.().catch(() => {});
@@ -79,15 +83,41 @@ export function BattleAnimator({ pokemon, initialLeft, initialRight, initialWinn
         lastFrame = frame;
         const elapsed = frame * FRAME_MS;
         const t = (initial.time + elapsed) / 1000;
-        const progress = clamp(elapsed / TAKEOVER_MS);
+        // Preserve the clicked phase for one complete cycle before resolving.
+        const resolving = slide === 4 && elapsed >= TAKEOVER_DELAY_MS;
+        const progress = slide === 4 ? clamp((elapsed - TAKEOVER_DELAY_MS) / TAKEOVER_MS) : 0;
         // Slow anticipation, decisive push, then a long eased settle.
         const takeover = progress < 0.2
           ? 0.06 * easeInOut(progress / 0.2)
           : 0.06 + 0.94 * (1 - Math.pow(1 - (progress - 0.2) / 0.8, 3));
-        const split = slide === 4
+        const split = resolving
           ? initial.split + ((winner === "left" ? 100 : 0) - initial.split) * takeover
-          : reducedMotion.matches ? 50 : 50 + 15 * Math.sin(t * Math.PI / 1.5);
+          : reducedMotion.matches ? 50 : 50 + 15 * Math.sin(t * 1000 * 2 * Math.PI / OSCILLATION_MS);
         stage.style.setProperty("--battle-split", `${split}%`);
+        // A clockwise-tilted vertical line has its top to the right of its bottom.
+        // Flatten only at the end of the takeover so the winner fills every corner.
+        const tilt = Math.tan(5 * Math.PI / 180) * stage.clientHeight / 2
+          * (slide === 4 ? 1 - takeover : 1);
+        stage.style.setProperty("--split-tilt", `${tilt}px`);
+        const lightning = lightningRef.current;
+        if (lightning) {
+          const height = stage.clientHeight;
+          const center = stage.clientWidth * split / 100;
+          const pose = reducedMotion.matches ? 0 : Math.round(t * 12);
+          // Angular, alternating teeth with a travelling energy pulse. Each drawing
+          // is held on twos, sharing the exact clock and seam with both masks.
+          const points = Array.from({ length: 19 }, (_, index) => {
+            const y = index / 18;
+            const pulse = 0.5 + 0.5 * Math.sin(index * 1.7 - pose * 0.8);
+            const tooth = index === 0 || index === 18 ? 0
+              : (index % 2 ? 1 : -1) * (5 + pulse * 16);
+            return `${center + tilt * (1 - 2 * y) + tooth},${height * y}`;
+          });
+          const path = `M${points.join(" L")}`;
+          lightning.querySelectorAll("path").forEach(segment => segment.setAttribute("d", path));
+          lightning.style.opacity = `${slide === 4 ? 1 - easeInOut(progress) : 1}`;
+          lightning.style.setProperty("--bolt-width", `${21 + (1 + Math.sin(pose * 0.8)) * 3.5}px`);
+        }
         for (const [side, phase] of [["left", 0], ["right", 2.1]] as const) {
           const strength = reducedMotion.matches ? 0 : slide === 4 ? Math.pow(1 - progress, 3) : 1;
           // Sample smooth arcs at 12 fps; no CSS interpolation between held poses.
@@ -95,10 +125,10 @@ export function BattleAnimator({ pokemon, initialLeft, initialRight, initialWinn
           const y = Math.sin(t * Math.PI * 4 + phase) * 1.2 * strength;
           stage.style.setProperty(`--shake-${side}`, `translate(${x}%, ${y}%) scale(${1 + 0.1 * strength})`);
         }
-        stage.style.setProperty("--battle-white", `${easeInOut(clamp((progress - 0.28) / 0.72))}`);
+        stage.style.setProperty("--battle-white", `${slide === 4 ? easeInOut(clamp(elapsed / RESOLUTION_MS)) : 0}`);
         if (slide === 3) battleFrame.current = { split, time: t * 1000 };
       }
-      if (slide === 3 || (now - start) < TAKEOVER_MS + FRAME_MS) request = requestAnimationFrame(render);
+      if (slide === 3 || (now - start) < RESOLUTION_MS + FRAME_MS) request = requestAnimationFrame(render);
     };
     render(start);
     return () => cancelAnimationFrame(request);
@@ -156,12 +186,16 @@ export function BattleAnimator({ pokemon, initialLeft, initialRight, initialWinn
 
   if (slide && left && right && champion) {
     return (
-      <div role="region" className="battle-stage" onClick={advance} aria-label="Battle slideshow. Click or press space to advance. Escape returns to the menu.">
+      <div ref={stageRef} role="region" className="battle-stage" onClick={advance} aria-label="Battle slideshow. Click, space, or right arrow advances. Left arrow goes back. Escape returns to the menu.">
         {slide === 1 && <div className="battle-solo">{sprite(left, "left")}</div>}
         {slide === 2 && <div className="battle-solo">{sprite(right, "right")}</div>}
         {(slide === 3 || slide === 4) && <div className="battle-pair">
           <div className="battle-fighter battle-fighter-left"><div className="battle-motion battle-shake-left">{sprite(left, "left")}</div></div>
           <div className="battle-fighter battle-fighter-right"><div className="battle-motion battle-shake-right">{sprite(right, "right")}</div></div>
+          <svg ref={lightningRef} className="battle-lightning" aria-hidden="true" focusable="false">
+            <path className="battle-lightning-aura" />
+            <path className="battle-lightning-core" />
+          </svg>
         </div>}
         {(slide === 5 || slide === 6) && <div className="battle-solo">{sprite(champion, winner, true)}</div>}
         {slide === 4 && <div key="white-in" className="battle-curtain battle-white-in" />}

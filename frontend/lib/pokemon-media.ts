@@ -14,4 +14,4 @@ export function mediaType(filename: string) {
 
 export type Facing = "left" | "right";
 export type PokemonMedia = { src: string; kind: "image" | "video"; facing: Facing };
-export type Pokemon = { name: string; battle: PokemonMedia; victory: PokemonMedia };
+export type Pokemon = { name: string; trainer?: string; battle: PokemonMedia; victory: PokemonMedia };

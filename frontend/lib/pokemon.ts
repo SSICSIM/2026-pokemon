@@ -4,7 +4,7 @@ import { mediaType, type Facing, type Pokemon, type PokemonMedia } from "./pokem
 
 export const pokemonDirectory = process.env.POKEMON_ASSET_DIR ?? path.resolve(process.cwd(), "../backend/pokemon");
 type Role = "battle" | "victory";
-type Orientation = Facing | Partial<Record<Role, Facing>>;
+type Orientation = Facing | (Partial<Record<Role, Facing>> & { trainer?: string });
 type Orientations = { default?: Facing; pokemon?: Record<string, Orientation> };
 
 async function assets(role: Role) {
@@ -33,6 +33,9 @@ export async function getPokemon(): Promise<Pokemon[]> {
   const defaultFacing = facing(config.default, "left");
   return [...battles].map(([name, battleFile]) => {
     const entry = config.pokemon?.[name];
+    const baseEntry = config.pokemon?.[name.replace(/-Mega$/i, "")];
+    const trainer = (typeof entry === "object" && entry ? entry.trainer : undefined)
+      ?? (typeof baseEntry === "object" && baseEntry ? baseEntry.trainer : undefined);
     const direction = (role: Role) => facing(typeof entry === "string" ? entry : entry?.[role], defaultFacing);
     const media = (file: string, role: Role): PokemonMedia => ({
       src: `/api/pokemon/${encodeURIComponent(`${role}/${file}`)}`,
@@ -42,6 +45,6 @@ export async function getPokemon(): Promise<Pokemon[]> {
     const battle = media(battleFile, "battle");
     const victoryFile = victories.get(name);
     // Fallback uses the battle file's orientation, not the missing victory's.
-    return { name, battle, victory: victoryFile ? media(victoryFile, "victory") : battle };
+    return { name, trainer, battle, victory: victoryFile ? media(victoryFile, "victory") : battle };
   });
 }

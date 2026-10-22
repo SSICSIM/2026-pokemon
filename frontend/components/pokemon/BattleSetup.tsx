@@ -1,11 +1,12 @@
 "use client";
 
+import { PokemonUpload } from "./PokemonUpload";
 import type { ReactNode } from "react";
 import { Check, Copy, Play, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import { PokemonSelector } from "./PokemonSelector";
 import type { Pokemon } from "@/lib/pokemon-media";
 
 type Side = "left" | "right";
@@ -42,10 +43,8 @@ export function BattleSetup({ pokemon, left, right, winner, copied, invalidLink,
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="aspect-video overflow-hidden rounded-md bg-muted">{selected && renderMedia(selected, side)}</div>
-                <NativeSelect id={`${side}-pokemon`} className="w-full" value={selected?.name ?? ""} disabled={!pokemon.length} onChange={event => onSelect(side, event.target.value)}>
-                  {!pokemon.length && <NativeSelectOption value="">No Pokémon available</NativeSelectOption>}
-                  {pokemon.map(p => <NativeSelectOption key={p.name} value={p.name}>{p.name}</NativeSelectOption>)}
-                </NativeSelect>
+                <PokemonSelector id={`${side}-pokemon`} pokemon={pokemon} selected={selected} onSelect={name => onSelect(side, name)} />
+                {selected?.trainer && <p className="text-sm text-muted-foreground">Trainer: {selected.trainer}</p>}
               </CardContent>
             </Card>
           );
@@ -66,11 +65,15 @@ export function BattleSetup({ pokemon, left, right, winner, copied, invalidLink,
         <CardFooter className="flex-wrap justify-between gap-3">
           <p className="text-xs text-muted-foreground">Click or press Space to advance. Esc returns here.</p>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" disabled={!left || !right} onClick={onCopy}><Copy /> {copied ? "Link copied" : "Copy battle link"}</Button>
-            <Button disabled={!left || !right} onClick={onStart}><Play /> Make video</Button>
+            <Button variant="outline" disabled={!left || !right} onClick={onStart}><Play /> Play video</Button>
+            <Button disabled={!left || !right} onClick={onCopy}><Copy /> {copied ? "Link copied" : "Copy battle link"}</Button>
           </div>
         </CardFooter>
       </Card>
+      <PokemonUpload trainers={[...new Set(pokemon.flatMap(p => p.trainer ? [p.trainer] : []))].sort((a, b) => a.localeCompare(b))} onUploaded={name => {
+        onSelect("left", name);
+        if (!right) onSelect("right", name);
+      }} />
       {!pokemon.length && <p className="text-sm text-muted-foreground">No battle animations are available yet.</p>}
     </section>
   );

@@ -30,6 +30,15 @@ the battle URL is preserved through login.
 
 ### Animation assets and orientation
 
+- Use **Add Pokémon** in Battle Generator to upload a battle animation and optional
+  victory animation, with the original facing direction for each. Files save directly
+  to these folders and orientations update automatically; the new Pokémon appears
+  in the selector without reloading. Uploads require staff login, reject duplicate
+  names, and accept PNG/APNG, GIF, JPEG, WebP, MP4/M4V, or WebM (50 MB per file).
+- Uploads can include a trainer: choose an existing name or enter a new one.
+  Trainers appear beside Pokémon in the selector and below the selected preview.
+  Trainer names are stored in the Pokémon's `trainer` field in `orientations.json`;
+  Mega forms inherit the base Pokémon's trainer unless they specify their own.
 - Put battle assets in `backend/pokemon/battle/` and victory assets in
   `backend/pokemon/victory/`. Keep one asset per Pokémon per folder.
 - Names can be `[Pokemon-Name].[extension]` or
@@ -61,9 +70,9 @@ the battle URL is preserved through login.
   }
   ```
 
-- Docker mounts this directory read-only into the frontend at `/pokemon`.
+- Docker mounts this directory read-write into the frontend at `/pokemon`.
   For a different deployment layout, set `POKEMON_ASSET_DIR` to the asset
-  directory's absolute path.
+  directory's absolute path and ensure the frontend process can write to it.
 
 ## Structure
 
