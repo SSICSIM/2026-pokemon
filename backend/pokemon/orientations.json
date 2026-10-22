@@ -10,11 +10,11 @@
       "victory": "left"
     },
     "Blaziken-Mega": {
-      "battle": "left",
+      "battle": "right",
       "victory": "left"
     },
     "Blaziken": {
-      "battle": "left",
+      "battle": "right",
       "victory": "left"
     },
     "Cacnea": {
@@ -30,11 +30,11 @@
       "victory": "left"
     },
     "Ceruledge": {
-      "battle": "left",
+      "battle": "right",
       "victory": "left"
     },
     "Cinderace": {
-      "battle": "left",
+      "battle": "right",
       "victory": "left"
     },
     "Decidueye": {
@@ -50,7 +50,7 @@
       "victory": "left"
     },
     "Metagross": {
-      "battle": "left",
+      "battle": "right",
       "victory": "left"
     },
     "Milotic": {
@@ -62,11 +62,11 @@
       "victory": "left"
     },
     "Palafin": {
-      "battle": "left",
+      "battle": "right",
       "victory": "left"
     },
     "Pikachu": {
-      "battle": "left",
+      "battle": "right",
       "victory": "left"
     },
     "Scorbunny": {
@@ -90,11 +90,11 @@
       "victory": "left"
     },
     "Snorlax": {
-      "battle": "left",
+      "battle": "right",
       "victory": "left"
     },
     "Spheal": {
-      "battle": "left",
+      "battle": "right",
       "victory": "left"
     },
     "Volbeat": {
