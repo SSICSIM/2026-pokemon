@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import {
   Combobox,
   ComboboxContent,
@@ -17,13 +18,32 @@ interface Props {
   onSelect: (name: string) => void;
 }
 
+function label(pokemon?: Pokemon | null) {
+  return pokemon ? `${pokemon.name}${pokemon.trainer ? ` — ${pokemon.trainer}` : ""}` : "";
+}
+
 export function PokemonSelector({ id, pokemon, selected, onSelect }: Props) {
+  const [inputValue, setInputValue] = useState(label(selected));
+  const selection = useRef(selected);
+  useEffect(() => {
+    selection.current = selected;
+    setInputValue(label(selected));
+  }, [selected]);
+
   return (
-    <Combobox
+    <Combobox<Pokemon>
       items={pokemon}
       value={selected ?? null}
-      onValueChange={value => { if (value) onSelect(value.name); }}
-      itemToStringLabel={item => item.trainer ? `${item.name} — ${item.trainer}` : item.name}
+      inputValue={inputValue}
+      onInputValueChange={setInputValue}
+      onOpenChange={open => { if (!open) setInputValue(label(selection.current)); }}
+      onValueChange={value => {
+        if (!value) return;
+        selection.current = value;
+        setInputValue(label(value));
+        onSelect(value.name);
+      }}
+      itemToStringLabel={label}
       itemToStringValue={item => item.name}
       isItemEqualToValue={(item, value) => item.name === value.name}
       autoHighlight
@@ -36,7 +56,7 @@ export function PokemonSelector({ id, pokemon, selected, onSelect }: Props) {
         disabled={!pokemon.length}
         onFocus={event => event.currentTarget.select()}
       />
-      <ComboboxContent className="min-w-(--anchor-width)">
+      <ComboboxContent className="min-w-(--anchor-width) [--accent:#d08700] [--accent-foreground:#ffffff]">
         <ComboboxEmpty>No Pokémon or trainers found.</ComboboxEmpty>
         <ComboboxList>
           {(item: Pokemon) => (

@@ -53,7 +53,7 @@ export function BattleAnimator({ pokemon, initialLeft, initialRight, initialWinn
   const advance = useCallback(() => {
     if (Date.now() < lockedUntil.current) return;
     if (slide === 6) { returnToMenu(); return; }
-    if (slide === 0) return;
+    if (slide === 0 || slide === 4) return;
     const next = slide + 1;
     if (next >= 4) lockedUntil.current = Date.now() + (next === 4 ? RESOLUTION_MS : 850);
     setSlide(next);
@@ -128,7 +128,13 @@ export function BattleAnimator({ pokemon, initialLeft, initialRight, initialWinn
         stage.style.setProperty("--battle-white", `${slide === 4 ? easeInOut(clamp(elapsed / RESOLUTION_MS)) : 0}`);
         if (slide === 3) battleFrame.current = { split, time: t * 1000 };
       }
-      if (slide === 3 || (now - start) < RESOLUTION_MS + FRAME_MS) request = requestAnimationFrame(render);
+      // Hold the fully white pose for one frame, then reveal victory automatically.
+      if (slide === 4 && now - start >= RESOLUTION_MS + FRAME_MS) {
+        lockedUntil.current = Date.now() + 850;
+        setSlide(5);
+        return;
+      }
+      request = requestAnimationFrame(render);
     };
     render(start);
     return () => cancelAnimationFrame(request);

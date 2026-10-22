@@ -44,7 +44,6 @@ export function BattleSetup({ pokemon, left, right, winner, copied, invalidLink,
               <CardContent className="space-y-3">
                 <div className="aspect-video overflow-hidden rounded-md bg-muted">{selected && renderMedia(selected, side)}</div>
                 <PokemonSelector id={`${side}-pokemon`} pokemon={pokemon} selected={selected} onSelect={name => onSelect(side, name)} />
-                {selected?.trainer && <p className="text-sm text-muted-foreground">Trainer: {selected.trainer}</p>}
               </CardContent>
             </Card>
           );
