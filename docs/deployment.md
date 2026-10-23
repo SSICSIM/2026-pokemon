@@ -129,10 +129,17 @@ SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=<key> node scri
 ```
 
 This creates the private `pokemon-assets` bucket (50 MB per file) and copies
-`backend/pokemon/battle`, `victory` and `orientations.json` into it. It never
+`backend/pokemon/battle`, `victory` and `orientations.json` into it. The repo
+has 36 Pokémon: 72 animations (about 116 MB; the largest is 15 MB, well under
+the bucket's limit) plus `orientations.json`, so the first run takes a few
+minutes. It never
 overwrites a file already in the bucket, so it is safe to run again; pass
 `--config` only if you want to replace the bucket's `orientations.json`
 with the repo's (that drops Pokémon added on the live site).
+
+To check the copy, open **Storage → pokemon-assets** in Supabase: `battle/` and
+`victory/` should each hold 36 files, next to `orientations.json`. If any are
+missing, run the script again; it only uploads what's not there yet.
 
 Locally nothing changes: with `SUPABASE_URL` blank the app keeps using
 `backend/pokemon` on disk.
