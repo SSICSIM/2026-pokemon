@@ -161,18 +161,23 @@ Render. Check that `https://<render-url>/healthz` returns `{"ok":true}`.
 - For the conference weekend, follow
   [conference-keepalive.md](conference-keepalive.md).
 
-## Battle animations (not covered by this setup)
+## Battle animations (needs the Supabase Storage follow-up)
 
 The Battle Generator reads its animations and `orientations.json` from
 `backend/pokemon/` through the frontend (`frontend/lib/pokemon.ts`,
-`POKEMON_ASSET_DIR`), not through the database. Two things change on Vercel:
+`POKEMON_ASSET_DIR`), not through the database. The repo has 36 Pokémon:
+72 animations (GIF, WebP and PNG, about 116 MB in total) plus
+`orientations.json`. With only this setup, two things break on Vercel:
 
-- **Reading:** the frontend must be deployed with the files it reads. Check
-  the Battle Generator on the Vercel URL during the smoke test.
-- **Uploading:** **Add Pokémon** writes files to disk, and Vercel's file system
-  is read-only. Uploads fail in production. Add new Pokémon locally, commit
-  the files under `backend/pokemon/`, and push, or move the assets to object
-  storage (for example a Supabase Storage bucket) before the conference.
+- **Large animations don't load.** A Vercel function returns at most about
+  4.5 MB per response, and four animations are bigger (the largest,
+  `victory/Altaria_victory.gif`, is 15 MB).
+- **Uploads fail.** **Add Pokémon** writes files to disk, and Vercel's file
+  system is read-only.
+
+The follow-up PR, "Store battle animations in Supabase Storage in
+production", moves the animations into a private Supabase Storage bucket and
+fixes both. Merge it before the conference.
 
 ## Troubleshooting
 
