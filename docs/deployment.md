@@ -106,9 +106,42 @@ Render. Check that `https://<render-url>/healthz` returns `{"ok":true}`.
    | `SITE_PASSWORD` | the staff password for this committee |
    | `NEXTAUTH_SECRET` | the base64 secret from step 1 |
    | `NEXTAUTH_URL` | `https://pokemon.ssicsim.ca` |
+   | `SUPABASE_URL` | the Supabase project URL (**Project Settings → API**), e.g. `https://<ref>.supabase.co` |
+   | `SUPABASE_SERVICE_ROLE_KEY` | the **service_role** key from the same page |
+   | `POKEMON_BUCKET` | `pokemon-assets` |
 
-   Never prefix `ADMIN_API_TOKEN` with `NEXT_PUBLIC_`.
-4. Click **Deploy**.
+   Never prefix `ADMIN_API_TOKEN` or `SUPABASE_SERVICE_ROLE_KEY` with
+   `NEXT_PUBLIC_`.
+4. Copy the battle animations into storage (step 5a) before the first deploy.
+5. Click **Deploy**.
+
+### 5a. Supabase Storage: the battle animations
+
+The Battle Generator's animations live in a private Storage bucket in the same
+Supabase project. The server lists them and gives the browser short-lived
+signed links, and **Add Pokémon** sends files straight from the browser to the
+bucket. This sidesteps Vercel's limit of about 4.5 MB per request.
+
+From `frontend/`, with the same two values as above:
+
+```
+SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=<key> node scripts/upload-pokemon-assets.mjs
+```
+
+This creates the private `pokemon-assets` bucket (50 MB per file) and copies
+`backend/pokemon/battle`, `victory` and `orientations.json` into it. The repo
+has 36 Pokémon: 72 animations (about 116 MB; the largest is 15 MB, well under
+the bucket's limit) plus `orientations.json`. It never overwrites a file
+already in the bucket, so it is safe to run again; pass `--config` only if you
+want to replace the bucket's `orientations.json` with the repo's (that drops
+Pokémon added on the live site).
+
+To check the copy, open **Storage → pokemon-assets** in Supabase: `battle/` and
+`victory/` should each hold 36 files, next to `orientations.json`. If any are
+missing, run the script again; it only uploads what's not there yet.
+
+Locally nothing changes: with `SUPABASE_URL` blank the app keeps using
+`backend/pokemon` on disk.
 
 ### 6. GoDaddy: the subdomain
 
@@ -129,6 +162,9 @@ Render. Check that `https://<render-url>/healthz` returns `{"ok":true}`.
    and read back a character.
 2. In Supabase, go to **Table Editor**, switch the schema dropdown to
    `pokemon`, and confirm the row is there. `public` should be untouched.
+3. Open **Battle Generator**: the Pokémon list should be full and the
+   animations should play. Add a test Pokémon with a large video (over 5 MB)
+   and confirm it appears in the selector and in the `pokemon-assets` bucket.
 
 ---
 
@@ -160,19 +196,6 @@ Render. Check that `https://<render-url>/healthz` returns `{"ok":true}`.
   $1–2.
 - For the conference weekend, follow
   [conference-keepalive.md](conference-keepalive.md).
-
-## Battle animations (not covered by this setup)
-
-The Battle Generator reads its animations and `orientations.json` from
-`backend/pokemon/` through the frontend (`frontend/lib/pokemon.ts`,
-`POKEMON_ASSET_DIR`), not through the database. Two things change on Vercel:
-
-- **Reading:** the frontend must be deployed with the files it reads. Check
-  the Battle Generator on the Vercel URL during the smoke test.
-- **Uploading:** **Add Pokémon** writes files to disk, and Vercel's file system
-  is read-only. Uploads fail in production. Add new Pokémon locally, commit
-  the files under `backend/pokemon/`, and push, or move the assets to object
-  storage (for example a Supabase Storage bucket) before the conference.
 
 ## Troubleshooting
 

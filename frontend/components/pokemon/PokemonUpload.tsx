@@ -41,6 +41,40 @@ function MediaField({ role, required }: { role: "battle" | "victory"; required?:
   );
 }
 
+async function postJson(url: string, payload: unknown) {
+  const response = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error ?? "Upload failed. Please try again.");
+  return result;
+}
+
+// In production files go straight to storage (prepare → upload → complete);
+// locally the form posts to the app, which writes to backend/pokemon.
+async function upload(body: FormData, trainer: string): Promise<string> {
+  const files = { battle: body.get("battle"), victory: body.get("victory") };
+  const meta = (role: "battle" | "victory") => {
+    const file = files[role];
+    return file instanceof File && file.size ? { fileName: file.name, size: file.size, facing: body.get(`${role}Facing`) } : undefined;
+  };
+  const request = { name: body.get("name"), trainer, battle: meta("battle"), victory: meta("victory") };
+  const prepared = await postJson("/api/pokemon/upload/prepare", request);
+  if (prepared.mode === "local") {
+    const response = await fetch("/api/pokemon/upload", { method: "POST", body });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error ?? "Upload failed. Please try again.");
+    return result.name;
+  }
+  for (const role of ["battle", "victory"] as const) {
+    const target = prepared.uploads?.[role];
+    if (!target) continue;
+    const response = await fetch(target.url, {
+      method: "PUT", body: files[role] as File, headers: { "Content-Type": target.contentType, "x-upsert": "false" },
+    });
+    if (!response.ok) throw new Error(`The ${role} file could not be uploaded. Please try again.`);
+  }
+  return (await postJson("/api/pokemon/upload/complete", request)).name;
+}
+
 export function PokemonUpload({ trainers = [], onUploaded }: { trainers?: string[]; onUploaded: (name: string) => void }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -54,12 +88,10 @@ export function PokemonUpload({ trainers = [], onUploaded }: { trainers?: string
     const trainer = String(body.get("trainer") ?? "").trim();
     setBusy(true); setError(""); setSuccess("");
     try {
-      const response = await fetch("/api/pokemon/upload", { method: "POST", body });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error ?? "Upload failed. Please try again.");
-      setSuccess(`${result.name}${trainer ? ` — ${trainer}` : ""} added to the Pokémon library.`);
+      const name = await upload(body, trainer);
+      setSuccess(`${name}${trainer ? ` — ${trainer}` : ""} added to the Pokémon library.`);
       setFormKey(key => key + 1);
-      onUploaded(result.name);
+      onUploaded(name);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed. Please try again.");
